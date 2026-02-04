@@ -1,463 +1,977 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>লিংক শর্টনার - EBH_5</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EBH Image Uploader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
-        
+
+        :root {
+            --primary: #7c3aed;
+            --primary-light: #8b5cf6;
+            --primary-dark: #5b21b6;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --radius: 20px;
+        }
+
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
-        
-        .banner-container {
-            width: 100%;
-            max-width: 600px;
-            margin-bottom: 60px;
-            text-align: center;
-        }
-        
-        .banner {
-            width: 100%;
-            max-height: 120px;
-            object-fit: cover;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            border: 3px solid rgba(255, 255, 255, 0.5);
-        }
-        
-        .logo-container {
-            margin-bottom: 80px;
-            text-align: center;
-        }
-        
-        .logo {
-            display: inline-block;
-            background: linear-gradient(45deg, #ff8a00, #e52e71);
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 800;
-            padding: 5px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: float 3s ease-in-out infinite, borderGlow 2s ease-in-out infinite alternate;
-            border: 3px solid transparent;
-            background-clip: padding-box;
+            background: linear-gradient(135deg, #f0f9ff 0%, #fef2f2 100%);
+            color: var(--text);
+            padding: 0;
+            margin: 0;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+        }
+
+        /* বাউন্সিং লোগো অ্যানিমেশন */
+        .logo-container {
+            text-align: center;
+            padding: 50px 20px 30px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            letter-spacing: -3px;
+            position: relative;
+            animation: bounceLogo 2s infinite alternate ease-in-out;
+            text-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        }
+
+        @keyframes bounceLogo {
+            0% {
+                transform: translateY(0) scale(1);
+                text-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+            }
+            100% {
+                transform: translateY(-15px) scale(1.05);
+                text-shadow: 0 20px 40px rgba(124, 58, 237, 0.4),
+                            0 0 60px rgba(245, 158, 11, 0.2);
+            }
+        }
+
+        .logo-subtitle {
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            margin-top: 5px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        /* গ্লোইং ডটস */
+        .glowing-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .dot {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary);
+            opacity: 0.1;
+            animation: floatDot 15s infinite linear;
+        }
+
+        @keyframes floatDot {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.1;
+            }
+            50% {
+                transform: translate(20px, -30px) scale(1.2);
+                opacity: 0.2;
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.1;
+            }
+        }
+
+        /* কন্টেন্ট এরিয়া */
+        .content {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 20px 30px;
+        }
+
+        /* কার্ড স্টাইল */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
             transition: transform 0.3s ease;
         }
-        
-        .logo:hover {
-            transform: scale(1.05);
+
+        .card:hover {
+            transform: translateY(-5px);
         }
-        
-        .logo::before {
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        /* আপলোড এরিয়া */
+        .upload-area {
+            border: 2px dashed var(--primary-light);
+            border-radius: 18px;
+            padding: 40px 20px;
+            text-align: center;
+            background: rgba(124, 58, 237, 0.03);
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .upload-area.active {
+            border-color: var(--secondary);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .upload-area.active .upload-icon {
+            color: var(--secondary);
+            transform: scale(1.2);
+        }
+
+        .upload-text h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .upload-text p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .browse-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            touch-action: manipulation;
+        }
+
+        .browse-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* আপলোড বাটন */
+        .upload-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--secondary), #059669);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+            touch-action: manipulation;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-btn:active {
+            transform: scale(0.98);
+        }
+
+        .upload-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .upload-btn:active::after {
+            left: 100%;
+        }
+
+        /* স্ট্যাটাস বার */
+        #status {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+            animation: slideUp 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--secondary);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .status-loading {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        /* প্রিভিউ */
+        #preview-container {
+            margin-top: 25px;
+            display: none;
+            animation: slideUp 0.5s ease;
+        }
+
+        .preview-title {
+            font-size: 1.2rem;
+            color: var(--text);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #preview {
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(124, 58, 237, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        #preview:active {
+            transform: scale(0.98);
+        }
+
+        /* লিংক বক্স - নতুন সুন্দর ডিজাইন */
+        .link-box {
+            margin-top: 25px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(16, 185, 129, 0.05));
+            border-radius: 18px;
+            padding: 25px;
+            display: none;
+            animation: slideUp 0.5s ease;
+            border: 1px solid rgba(124, 58, 237, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-box::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.5s;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
-        
-        .logo:hover::before {
-            left: 100%;
+
+        .link-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
-        
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+
+        .link-header h3 {
+            color: var(--text);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        
-        @keyframes borderGlow {
-            0% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 138, 0, 0.5); }
-            100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(229, 46, 113, 0.8); }
+
+        .link-header h3 i {
+            color: var(--primary);
+            font-size: 1.2rem;
         }
-        
-        .box {
-            width: 100%;
-            max-width:450px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        h2 {
-            margin: 0 0 15px;
-            font-size: 24px;
-            color: #1a2a6c;
-            text-align: center;
-        }
-        
-        p {
-            margin: 0 0 20px;
-            color: #555;
-            font-size: 14px;
+
+        #link {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 18px;
+            border-radius: 14px;
+            word-break: break-all;
+            font-size: 1rem;
+            color: var(--text);
+            border: 1px solid rgba(124, 58, 237, 0.15);
+            font-family: 'Monaco', 'Courier New', monospace;
             line-height: 1.5;
-            text-align: center;
+            max-height: 140px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
         }
-        
-        .row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        input[type="text"] {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #f9f9f9;
-        }
-        
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #1a2a6c;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.1);
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        button {
-            padding: 12px 20px;
-            border-radius: 10px;
+
+        /* কপি বাটন - সুন্দর ডিজাইন */
+        .copy-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
             border: none;
-            color: #fff;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1.1rem;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 16px;
             transition: all 0.3s ease;
-            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            gap: 12px;
+            touch-action: manipulation;
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+            position: relative;
+            overflow: hidden;
         }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+
+        .copy-btn:active {
+            transform: scale(0.98);
         }
-        
-        button:active {
-            transform: translateY(1px);
+
+        .copy-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
         }
-        
-        #shortBtn {
-            background: linear-gradient(135deg, #1a2a6c, #2a3a9c);
+
+        .copy-btn:active::after {
+            left: 100%;
         }
-        
-        #shortBtn:hover {
-            background: linear-gradient(135deg, #2a3a9c, #3a4aac);
-        }
-        
-        #clearBtn {
-            background: linear-gradient(135deg, #6b7280, #8b94a5);
-        }
-        
-        #clearBtn:hover {
-            background: linear-gradient(135deg, #8b94a5, #a5aebf);
-        }
-        
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px dashed #1a2a6c;
-            background: rgba(26, 42, 108, 0.05);
+
+        /* কপি সফল মেসেজ */
+        .copy-success {
             display: none;
-            align-items: center;
-            justify-content: space-between;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .short {
-            font-weight: 700;
-            color: #1a2a6c;
-            word-break: break-all;
-            font-size: 18px;
-        }
-        
-        .short a {
-            color: #1a2a6c;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .short a:hover {
-            color: #2a3a9c;
-            text-decoration: underline;
-        }
-        
-        .copy {
-            background: linear-gradient(135deg, #16a34a, #20c05c);
-            border: none;
-            padding: 10px 15px;
-            color: #fff;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-        
-        .copy:hover {
-            background: linear-gradient(135deg, #20c05c, #2ad56c);
-        }
-        
-        .service-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-        
-        .muted {
-            font-size: 12px;
-            color: #777;
-            margin-top: 20px;
             text-align: center;
-            line-height: 1.4;
-        }
-        
-        .error {
-            color: #d32f2f;
+            color: var(--secondary);
+            font-weight: 600;
             margin-top: 15px;
-            display: none;
-            font-size: 14px;
-            padding: 10px;
-            background: rgba(211, 47, 47, 0.1);
-            border-radius: 8px;
-            border-left: 4px solid #d32f2f;
+            padding: 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            animation: slideUp 0.3s ease;
         }
-        
-        .spinner {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-left-color: #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .join-text {
+
+        /* ফুটার */
+        .footer {
             text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            padding: 25px 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
             margin-top: 20px;
-            color: white;
-            font-size: 14px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
-        
-        @media (max-width: 600px) {
-            .button-group {
-                flex-direction: column;
+
+        /* প্রোগ্রেস বার */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* টাচ ফ্রেন্ডলি স্টাইল */
+        @media (hover: hover) {
+            .browse-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 25px rgba(124, 58, 237, 0.3);
             }
             
-            .box {
+            .upload-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+            }
+            
+            .copy-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 25px rgba(124, 58, 237, 0.3);
+            }
+        }
+
+        /* মোবাইল অপ্টিমাইজেশন */
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 4rem;
+            }
+            
+            .logo-subtitle {
+                font-size: 1rem;
+            }
+            
+            .content {
+                padding: 0 15px 30px;
+            }
+            
+            .card {
                 padding: 20px;
             }
             
-            .banner {
-                max-height: 100px;
+            .upload-area {
+                padding: 30px 15px;
+            }
+            
+            .upload-icon {
+                font-size: 3rem;
+            }
+            
+            .upload-text h3 {
+                font-size: 1.3rem;
+            }
+            
+            .upload-btn, .copy-btn {
+                padding: 18px;
+            }
+            
+            .link-box {
+                padding: 20px;
+            }
+            
+            #link {
+                padding: 16px;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .logo {
+                font-size: 3.5rem;
+            }
+            
+            .card-title {
+                font-size: 1.3rem;
+            }
+            
+            .upload-text h3 {
+                font-size: 1.2rem;
+            }
+            
+            .browse-btn {
+                padding: 14px 24px;
+            }
+            
+            .link-header h3 {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* ডার্ক মোড সাপোর্ট */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #f1f5f9;
+                --text-light: #cbd5e1;
+                --bg: #0f172a;
+                --card: #1e293b;
+                --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            }
+            
+            body {
+                background: linear-gradient(135deg, #0c4a6e 0%, #450a0a 100%);
+            }
+            
+            .upload-area {
+                background: rgba(124, 58, 237, 0.05);
+            }
+            
+            #link {
+                background: rgba(30, 41, 59, 0.9);
+                color: #cbd5e1;
+                box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+            
+            .link-box {
+                background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(16, 185, 129, 0.1));
+                border: 1px solid rgba(124, 58, 237, 0.2);
+            }
+            
+            .copy-success {
+                background: rgba(16, 185, 129, 0.15);
+                border: 1px solid rgba(16, 185, 129, 0.3);
+            }
+            
+            .footer {
+                border-top-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* ল্যান্ডস্কেপ মোড */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .logo-container {
+                padding: 20px 20px 15px;
+            }
+            
+            .logo {
+                font-size: 3.5rem;
+            }
+            
+            .content {
+                padding-bottom: 20px;
+            }
+            
+            .card {
+                margin-bottom: 15px;
+            }
+            
+            .link-box {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- ব্যানার ইমেজ ক্লিকযোগ্য করা হয়েছে -->
-    <div class="banner-container">
-        <a href="https://t.me/earningbyhabib" target="_blank" rel="noopener noreferrer">
-            <img src="https://i.postimg.cc/C1Wrd53H/20250924-182008.png" alt="EBH_5 ব্যানার" class="banner">
-        </a>
-    </div>
-    
+    <!-- গ্লোইং ডটস -->
+    <div class="glowing-dots" id="glowingDots"></div>
+
+    <!-- লোগো -->
     <div class="logo-container">
-        <a href="https://t.me/EBH_5" class="logo" target="_blank">☆ ᴇʙʜ_𝟱 ☆</a>
-        <div class="join-text"></div>
-   <div class="box">
-        <h2>🔗 লিংক শর্টনার 🔗</h2>
-        <p>আপনার দীর্ঘ লিংকগুলোকে শর্ট করে পেশাদার মার্কেটিং করুন - সহজ, দ্রুত ও কার্যকরী!</p>
+        <div class="logo animate__animated animate__fadeInDown">EBH</div>
+        <div class="logo-subtitle animate__animated animate__fadeInUp">Image Uploader</div>
+    </div>
 
-        <div class="row">
-            <input id="longUrl" type="text" placeholder="https:// দিয়ে শুরু করে আপনার লিংকটি লিখুন..." />
-        </div>
-
-        <div class="button-group">
-            <button id="shortBtn">
-                <span class="btn-icon">🔗</span> লিংক শর্ট করুন
-            </button>
-            <button id="clearBtn">
-                <span class="btn-icon">🗑️</span> ক্লিয়ার
-            </button>
-        </div>
-
-        <div class="result" id="resultBox">
-            <div>
-                <div style="font-size:14px;color:#555;margin-bottom:5px">শর্ট URL</div>
-                <div class="short" id="shortLink">—</div>
-                <div class="service-info" id="usedService"></div>
+    <!-- মূল কন্টেন্ট -->
+    <div class="content">
+        <!-- আপলোড কার্ড -->
+        <div class="card animate__animated animate__fadeInUp">
+            <div class="card-title">
+                <i class="fas fa-cloud-upload-alt"></i>
+                ছবি আপলোড করুন
             </div>
-            <div>
-                <button class="copy" id="copyBtn">কপি করুন</button>
+            
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <div class="upload-text">
+                    <h3>ছবি এখানে ট্যাপ করুন</h3>
+                    <p>অথবা ব্রাউজ বাটনে ক্লিক করে আপনার কম্পিউটার থেকে ছবি নির্বাচন করুন। JPG, PNG, GIF, WebP ফাইল সাপোর্টেড।</p>
+                </div>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                <button class="browse-btn" onclick="document.getElementById('imageInput').click()">
+                    <i class="fas fa-folder-open"></i> ছবি নির্বাচন করুন
+                </button>
+            </div>
+
+            <!-- আপলোড বাটন -->
+            <button class="upload-btn" onclick="uploadImage()">
+                <i class="fas fa-upload"></i> ছবি আপলোড করুন
+            </button>
+
+            <!-- স্ট্যাটাস বার -->
+            <div id="status"></div>
+
+            <!-- প্রগ্রেস বার -->
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <!-- ছবি প্রিভিউ -->
+            <div id="preview-container">
+                <div class="preview-title">
+                    <i class="fas fa-image"></i> আপলোডেড ছবি:
+                </div>
+                <img id="preview" src="" alt="Preview">
             </div>
         </div>
 
-        <div class="muted">লোগোতে ক্লিক করে আমাদের টেলিগ্রাম চ্যানেলে জয়েন হোন - নতুন নতুন আপডেট পেতে!</div>
-        <div class="error" id="errorBox"></div>
+        <!-- লিংক বক্স (লুকানো অবস্থায়) -->
+        <div class="link-box" id="linkBox">
+            <div class="link-header">
+                <h3><i class="fas fa-link"></i> আপনার ছবির লিংক:</h3>
+            </div>
+            <div id="link"></div>
+            <button class="copy-btn" onclick="copyLink()">
+                <i class="far fa-copy"></i> লিংক কপি করুন
+            </button>
+            <div class="copy-success" id="copySuccess">
+                <i class="fas fa-check-circle"></i> লিংক কপি হয়েছে!
+            </div>
+        </div>
+    </div>
+
+    <!-- ফুটার -->
+    <div class="footer">
+        <p>© 2023 EBH Image Uploader | Made with <i class="fas fa-heart" style="color: #ef4444;"></i></p>
     </div>
 
     <script>
-        const btn = document.getElementById('shortBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const longUrl = document.getElementById('longUrl');
-        const resultBox = document.getElementById('resultBox');
-        const shortLink = document.getElementById('shortLink');
-        const errorBox = document.getElementById('errorBox');
-        const copyBtn = document.getElementById('copyBtn');
-        const usedService = document.getElementById('usedService');
+        // গ্লোইং ডটস তৈরি
+        function createGlowingDots() {
+            const container = document.getElementById('glowingDots');
+            const dotCount = 12;
+            
+            for (let i = 0; i < dotCount; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                
+                // র‍্যান্ডম সাইজ এবং অবস্থান
+                const size = Math.random() * 100 + 50;
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = 10 + Math.random() * 10;
+                
+                dot.style.width = `${size}px`;
+                dot.style.height = `${size}px`;
+                dot.style.left = `${x}%`;
+                dot.style.top = `${y}%`;
+                dot.style.animationDelay = `${delay}s`;
+                dot.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(dot);
+            }
+        }
 
-        // জেনারেট করা শর্ট লিংকগুলো ট্র্যাক করার জন্য
-        const generatedLinks = new Map();
-
-        function showError(msg){ 
-            errorBox.style.display='block'; 
-            errorBox.textContent = msg; 
+        // ড্রাগ এন্ড ড্রপ ফাংশনালিটি
+        const uploadArea = document.getElementById('uploadArea');
+        const imageInput = document.getElementById('imageInput');
+        
+        // ড্রাগ ওভার ইফেক্ট
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
         }
         
-        function hideError(){ 
-            errorBox.style.display='none'; 
-            errorBox.textContent=''; 
-        }
-
-        function setLoading(on){
-            if(on){ 
-                btn.disabled=true; 
-                btn.innerHTML = '<span class="spinner"></span> প্রসেসিং...'; 
-            }
-            else { 
-                btn.disabled=false; 
-                btn.innerHTML = '<span class="btn-icon">🔗</span> লিংক শর্ট করুন'; 
-            }
-        }
-
-        // র‍্যান্ডম স্ট্রিং জেনারেটর
-        function generateRandomString(length = 6) {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-
-        async function callIsGd(url){
-            // প্রতিবার আলাদা লিংক পেতে আমরা মূল URL-এ একটি র‍্যান্ডম প্যারামিটার যোগ করব
-            const randomParam = 'ebh_' + generateRandomString(8);
-            const separator = url.includes('?') ? '&' : '?';
-            const uniqueUrl = url + separator + randomParam + '=1';
+        // হাইলাইট ড্রপ এরিয়া
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.classList.add('active');
+            }, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.classList.remove('active');
+            }, false);
+        });
+        
+        // ড্রপ হ্যান্ডলার
+        uploadArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
             
-            // is.gd JSON API
-            const endpoint = 'https://is.gd/create.php?format=json&url=' + encodeURIComponent(uniqueUrl);
-            const res = await fetch(endpoint);
-            if(!res.ok) throw new Error('is.gd failed status ' + res.status);
-            const j = await res.json();
-            if(j && j.shorturl) return j.shorturl;
-            throw new Error('is.gd bad response');
+            if (files.length > 0) {
+                imageInput.files = files;
+                showPreview(files[0]);
+                showStatus('ছবি সিলেক্টেড! এখন আপলোড বাটনে ক্লিক করুন।', 'success');
+            }
         }
-
-        btn.addEventListener('click', async () => {
-            hideError();
-            resultBox.style.display='none';
-            shortLink.textContent = '';
-            usedService.textContent = '';
-            const url = longUrl.value.trim();
-            
-            if(!url){ 
-                showError('দয়া করে একটি লিংক লিখুন (https://...)'); 
-                return; 
-            }
-            
-            try{ 
-                new URL(url); 
-            } catch(e){ 
-                showError('ভুল URL — https:// দিয়ে শুরু করা উচিত'); 
-                return; 
-            }
-            
-            setLoading(true);
-
-            try{
-                const shortUrl = await callIsGd(url);
-                shortLink.innerHTML = `<a href="${shortUrl}" target="_blank" rel="noopener noreferrer">${shortUrl}</a>`;
-                usedService.textContent = 'আপনার শর্ট লিংক কপি করে ব্যাবহার করুন। 🔗🥰';
-                resultBox.style.display='flex';
-            }catch(err){
-                console.error(err);
-                showError('লিংক শর্ট করতে ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।');
-            }finally{
-                setLoading(false);
+        
+        // ফাইল ইনপুট পরিবর্তন হ্যান্ডলার
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                showPreview(this.files[0]);
+                showStatus('ছবি সিলেক্টেড! এখন আপলোড বাটনে ক্লিক করুন।', 'success');
             }
         });
-
-        copyBtn.addEventListener('click', async () => {
-            const txt = shortLink.innerText.trim();
-            if(!txt) return;
-            try{
-                await navigator.clipboard.writeText(txt);
-                copyBtn.textContent = 'কপি হয়েছে ✓';
-                setTimeout(()=> copyBtn.textContent = 'কপি করুন', 1500);
-            }catch(e){
-                alert('কপি ব্যর্থ — ম্যানুয়ালি কপি করুন: ' + txt);
+        
+        // ছবি প্রিভিউ দেখানো
+        function showPreview(file) {
+            if (!file.type.match('image.*')) {
+                showStatus('শুধুমাত্র ছবি ফাইল নির্বাচন করুন (JPG, PNG, GIF, WebP)', 'error');
+                return;
             }
-        });
-
-        clearBtn.addEventListener('click', ()=> { 
-            longUrl.value=''; 
-            resultBox.style.display='none'; 
-            hideError(); 
-        });
-
-        longUrl.addEventListener('keydown', (e)=>{ 
-            if(e.key==='Enter') btn.click(); 
+            
+            // ফাইল সাইজ চেক (10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showStatus('ফাইলের সাইজ 10MB এর বেশি হতে পারবে না', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const preview = document.getElementById('preview');
+                const previewContainer = document.getElementById('preview-container');
+                
+                preview.src = e.target.result;
+                previewContainer.style.display = 'block';
+                
+                // প্রিভিউ ইমেজে অ্যানিমেশন যোগ
+                preview.style.animation = 'slideUp 0.5s ease';
+            }
+            
+            reader.readAsDataURL(file);
+        }
+        
+        // স্ট্যাটাস বার আপডেট
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            const progressBar = document.getElementById('progressBar');
+            
+            // প্রগ্রেস বার লুকানো
+            progressBar.style.display = 'none';
+            
+            // স্ট্যাটাস বার সেট করা
+            status.textContent = message;
+            status.className = '';
+            status.classList.add(`status-${type}`);
+            status.style.display = 'flex';
+            
+            // স্ট্যাটাস আইকন যোগ
+            let icon = '';
+            if (type === 'success') icon = '<i class="fas fa-check-circle"></i>';
+            else if (type === 'error') icon = '<i class="fas fa-exclamation-circle"></i>';
+            else if (type === 'loading') icon = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            status.innerHTML = icon + ' ' + message;
+            
+            // কিছু সময় পর স্ট্যাটাস বার স্বয়ংক্রিয়ভাবে লুকানো
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 4000);
+            }
+        }
+        
+        // প্রগ্রেস বার আপডেট
+        function updateProgress(percent) {
+            const progressBar = document.getElementById('progressBar');
+            const progress = document.getElementById('progress');
+            
+            progressBar.style.display = 'block';
+            progress.style.width = `${percent}%`;
+        }
+        
+        // ছবি আপলোড ফাংশন
+        async function uploadImage() {
+            const fileInput = document.getElementById('imageInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showStatus('প্রথমে একটি ছবি নির্বাচন করুন', 'error');
+                return;
+            }
+            
+            showStatus('ছবি আপলোড হচ্ছে...', 'loading');
+            
+            // প্রগ্রেস বার শুরু
+            updateProgress(30);
+            
+            // আপলোড বাটনে লোডিং ইফেক্ট
+            const uploadBtn = document.querySelector('.upload-btn');
+            const originalBtnText = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> আপলোড হচ্ছে...';
+            uploadBtn.disabled = true;
+            
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            try {
+                // প্রগ্রেস বার আপডেট
+                updateProgress(60);
+                
+                const response = await fetch('https://api.imgbb.com/1/upload?key=0ad6b7bef37f381582e19682a15a8c55', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                // প্রগ্রেস বার আপডেট
+                updateProgress(90);
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // প্রগ্রেস বার সম্পূর্ণ
+                    updateProgress(100);
+                    
+                    // প্রিভিউ আপডেট
+                    const preview = document.getElementById('preview');
+                    preview.src = data.data.url;
+                    
+                    // লিংক বক্স দেখানো
+                    const linkBox = document.getElementById('linkBox');
+                    const link = document.getElementById('link');
+                    
+                    link.textContent = data.data.url;
+                    linkBox.style.display = 'block';
+                    
+                    // স্ট্যাটাস আপডেট
+                    showStatus('ছবি সফলভাবে আপলোড হয়েছে!', 'success');
+                    
+                    // প্রিভিউ কন্টেইনার দেখানো
+                    document.getElementById('preview-container').style.display = 'block';
+                    
+                    // আপলোড বাটন রিসেট
+                    uploadBtn.innerHTML = originalBtnText;
+                    uploadBtn.disabled = false;
+                    
+                    // কিছুক্ষণ পর প্রগ্রেস বার লুকানো
+                    setTimeout(() => {
+                        document.getElementById('progressBar').style.display = 'none';
+                    }, 1500);
+                } else {
+                    showStatus('আপলোড ব্যর্থ হয়েছে। পরে আবার চেষ্টা করুন।', 'error');
+                    uploadBtn.innerHTML = originalBtnText;
+                    uploadBtn.disabled = false;
+                    document.getElementById('progressBar').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('নেটওয়ার্ক ত্রুটি। পরে আবার চেষ্টা করুন।', 'error');
+                uploadBtn.innerHTML = originalBtnText;
+                uploadBtn.disabled = false;
+                document.getElementById('progressBar').style.display = 'none';
+            }
+        }
+        
+        // লিংক কপি ফাংশন
+        function copyLink() {
+            const link = document.getElementById('link').textContent;
+            
+            if (!link || link.trim() === '') {
+                showStatus('কপি করার জন্য কোনো লিংক নেই', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(link)
+                .then(() => {
+                    // কপি বাটনে সফলতা ইফেক্ট
+                    const copyBtn = document.querySelector('.copy-btn');
+                    const copySuccess = document.getElementById('copySuccess');
+                    const originalBtnText = copyBtn.innerHTML;
+                    
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> কপি হয়েছে!';
+                    copyBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    copySuccess.style.display = 'block';
+                    
+                    // কিছুক্ষণ পর বাটন রিসেট
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalBtnText;
+                        copyBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--primary-light))';
+                        copySuccess.style.display = 'none';
+                    }, 3000);
+                })
+                .catch(err => {
+                    showStatus('লিংক কপি করতে সমস্যা হয়েছে', 'error');
+                });
+        }
+        
+        // পৃষ্ঠা লোড হওয়ার পর ইফেক্ট তৈরি
+        document.addEventListener('DOMContentLoaded', function() {
+            createGlowingDots();
+            
+            // ওয়েলকাম মেসেজ
+            setTimeout(() => {
+                showStatus('EBH ইমেজ আপলোডারে আপনাকে স্বাগতম!', 'success');
+            }, 1000);
+            
+            // মোবাইল টাচ ইভেন্ট অপ্টিমাইজেশন
+            document.querySelectorAll('button, .upload-area').forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.opacity = '0.8';
+                });
+                
+                element.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
         });
     </script>
 </body>
