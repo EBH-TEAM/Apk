@@ -15,22 +15,21 @@
         body {
             background: #0c0f1a;
             font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            /* ভার্টিক্যালি সেন্টার করার জন্য ফ্লেক্স */
             display: flex;
-            align-items: flex-start;    /* কন্টেন্ট উপরে */
+            align-items: center;      /* উল্লম্বভাবে মাঝখানে */
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            padding: 12px 20px 0 20px;
+            padding: 20px;            /* চারপাশে সমান গ্যাপ, নিচে লেগে যাবে না */
         }
 
         /* মেইন কন্টেইনার: শুধু ইনপুট ফিল্ড (বাটন ছাড়া) */
         .stealth-tool {
             width: 100%;
             max-width: 620px;
-            margin-top: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+            /* উপরে-নিচে কোন এক্সট্রা মার্জিন ছাড়া, ফ্লেক্স প্যারেন্ট ইতিমধ্যে সেন্টার করবে */
+            margin: 0 auto;
         }
 
         /* ইনপুট বক্স: বড়, গ্লাসমরফিজম + রোটেটিং গ্রেডিয়েন্ট বর্ডার */
@@ -98,7 +97,7 @@
             box-shadow: 0 0 0 3px rgba(80, 180, 250, 0.2), 0 8px 20px black;
         }
 
-        /* প্লেসহোল্ডার স্টাইল — স্লিক মিনিমাল */
+        /* প্লেসহোল্ডার স্টাইল — ঠিক আপনার দেয়া লেখা */
         #twofa::placeholder {
             color: #b8d4ff;
             font-weight: 500;
@@ -115,7 +114,7 @@
             display: none !important;
         }
 
-        /* মোবাইল অ্যাডজাস্ট */
+        /* মোবাইল অ্যাডজাস্ট: চিকন স্ক্রিনেও ঠিক থাকবে */
         @media (max-width: 550px) {
             #twofa {
                 padding: 14px 22px;
@@ -126,11 +125,11 @@
                 border-radius: 56px;
             }
             body {
-                padding: 10px 16px 0 16px;
+                padding: 20px;   /* মোবাইলেও সমান প্যাডিং */
             }
         }
 
-        /* ম্যানুয়ালি কোনো টেক্সট বার্তা থাকলেও লুকানো হবে, ইনপুট ছাড়া কিছু নয় */
+        /* অন্য সব এলিমেন্ট লুকান */
         .stealth-tool > :not(.input-wrapper) {
             display: none;
         }
@@ -141,6 +140,7 @@
 
 <div class="stealth-tool">
     <!-- শুধু ইনপুট ফিল্ড, কোনো বাটন নেই — ঘূর্ণায়মান রঙিন বর্ডার সহ -->
+    <!-- প্লেসহোল্ডার আপনার দেয়া লেখা অনুযায়ী -->
     <div class="input-wrapper">
         <input type="text" id="twofa" placeholder="⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡">
     </div>
@@ -225,12 +225,12 @@
                     currentValidSecret = '';
                     stopTotpTimer();
                 }
-                // প্লেসহোল্ডার আবার ডিফল্ট সেট করুন (কোনো স্থায়ী টেক্সট বার্তা না দেখাতে)
-                if (inputField && inputField.placeholder !== "⚡ 𝟐𝐅𝐀 𝐒𝐄𝐂𝐑𝐄𝐓  →  𝐀𝐔𝐓𝐎 𝐂𝐋𝐄𝐀𝐑 𝟐𝐒  ⚡") {
-                    inputField.placeholder = "⚡ 𝟐𝐅𝐀  𝐒𝐄𝐂𝐑𝐄𝐓  →  𝐀𝐔𝐓𝐎 𝐂𝐋𝐄𝐀𝐑 𝟐𝐒  ⚡";
+                // প্লেসহোল্ডার আবার ডিফল্ট সেট করুন (আপনার দেয়া মূল টেক্সটে ফিরিয়ে)
+                if (inputField && inputField.placeholder !== "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡") {
+                    inputField.placeholder = "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡";
                 }
                 clearTimeoutId = null;
-            }, 2000);
+            }, 1000);
         }
 
         // ---------- ক্লিয়ার প্রিভেন্ট (ইউজার ইনপুট দিয়েছে / নতুন টাইপ করলে পূর্বের ক্লিয়ার টাইমার রিসেট) ----------
@@ -246,9 +246,8 @@
             if (!currentValidSecret || currentValidSecret.length < 16) return false;
             try {
                 const code = generateTOTP(currentValidSecret);
-                // ক্লিপবোর্ডে কপি (silent, আধুনিক পদ্ধতি)
+                // ক্লিপবোর্ডে কপি (silent)
                 navigator.clipboard.writeText(code).catch(() => {
-                    // fallback for older permissions
                     const tempArea = document.createElement('textarea');
                     tempArea.style.position = 'fixed';
                     tempArea.style.top = '-999px';
@@ -260,20 +259,17 @@
                     document.body.removeChild(tempArea);
                 });
                 
-                // সাময়িক প্লেসহোল্ডারে নোটিফিকেশন (অতিরিক্ত UI ছাড়াই স্ক্রিনে একটু হিন্ট)
-                const originalPlaceholder = "⚡  𝟐𝐅𝐀   →  𝐀𝐔𝐓𝐎 𝐂𝐋𝐄𝐀𝐑 𝟐𝐒  ⚡";
+                // সাময়িক প্লেসহোল্ডারে নোটিফিকেশন (অতিরিক্ত UI ছাড়াই)
+                const originalPlaceholder = "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡";
                 if (inputField.placeholder !== originalPlaceholder && !inputField.placeholder.includes("copied")) {
-                    // মৃদু ইঙ্গিত দিতে পারে কিন্তু ইনপুটের মান পরিবর্তন করে না
                     inputField.placeholder = `✔️ ${code} copied`;
                     setTimeout(() => {
                         if (inputField.placeholder.includes("copied") && !currentValidSecret) {
                             inputField.placeholder = originalPlaceholder;
                         } else if (inputField.placeholder.includes("copied") && currentValidSecret) {
-                            // যদি সিক্রেট এখনও ভ্যালিড থাকে তাহলে প্লেসহোল্ডার রিসেট করবেন না, কিন্তু পরে অটোক্লিয়ার রিসেট করবে
                             if (!clearTimeoutId) {
                                 inputField.placeholder = originalPlaceholder;
                             } else {
-                                // অটোক্লিয়ার pending থাকলে বাদে স্বাভাবিক
                                 setTimeout(() => {
                                     if(inputField.placeholder.includes("copied")) inputField.placeholder = originalPlaceholder;
                                 }, 1000);
@@ -282,22 +278,19 @@
                             inputField.placeholder = originalPlaceholder;
                         }
                     }, 1200);
-                } else if (!inputField.placeholder.includes("copied") && !currentValidSecret) {
-                    // normal state
                 }
                 return true;
             } catch (err) {
                 console.warn("TOTP failed:", err);
-                // যদি সিক্রেট ইনভ্যালিড হয় তাহলে রিসেট
                 if (currentValidSecret) {
                     currentValidSecret = '';
                     stopTotpTimer();
                     inputField.value = '';
-                    cancelPendingClear();   // pending ক্লিয়ার বাতিল করে আবার schedule করবে না
+                    cancelPendingClear();
                     inputField.placeholder = "❌ invalid key";
                     setTimeout(() => {
                         if (inputField.placeholder === "❌ invalid key") {
-                            inputField.placeholder = "⚡ 𝟐𝐅𝐀 𝐒𝐄𝐂𝐑𝐄𝐓  →  𝐀𝐔𝐓𝐎 𝐂𝐋𝐄𝐀𝐑 𝟐𝐒  ⚡";
+                            inputField.placeholder = "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡";
                         }
                     }, 1800);
                 }
@@ -309,9 +302,7 @@
         function startTotpUpdates() {
             stopTotpTimer();
             if (!currentValidSecret || currentValidSecret.length < 16) return;
-            // তাৎক্ষণিকভাবে কোড কপি
             generateAndCopyCode();
-            // প্রতি 1 সেকেন্ডে আপডেট (TOTP 30s window)
             totpInterval = setInterval(() => {
                 if (currentValidSecret && currentValidSecret.length >= 16) {
                     generateAndCopyCode();
@@ -327,40 +318,34 @@
             
             // যদি ইনপুট সম্পূর্ণ খালি হয়
             if (trimmedSecret === "") {
-                // কোনো অ্যাক্টিভ সিক্রেট থাকলে রিসেট
                 if (currentValidSecret) {
                     currentValidSecret = '';
                     stopTotpTimer();
                 }
-                cancelPendingClear();   // pending অটো ক্লিয়ার থাকলে বাতিল (কারণ ম্যানুয়ালি খালি করা)
+                cancelPendingClear();
                 return;
             }
             
             // নতুন কিছু ইনপুট পেলেই আগের ক্লিয়ার টাইমার বাতিল
             cancelPendingClear();
             
-            // যদি স্ট্রিংয়ের দৈর্ঘ্য ১৬+ হয় তাহলে টোটিপি সিক্রেট হিসেবে ট্রাই
+            // দৈর্ঘ্য ১৬+ হলে টোটপি চেক
             if (trimmedSecret.length >= 16) {
-                // টেস্ট জেনারেশন
                 try {
                     const testCode = generateTOTP(trimmedSecret);
                     if (testCode && testCode.length === 6) {
-                        // ভ্যালিড সিক্রেট – পুরনো সিক্রেট থাকলে রিপ্লেস
                         if (currentValidSecret !== trimmedSecret) {
                             currentValidSecret = trimmedSecret;
                             startTotpUpdates();
                         } else {
-                            // সেইম সিক্রেট, টাইমার চলতে থাকবে
                             if (!totpInterval) startTotpUpdates();
                         }
-                        // সফল সেটআপের পরে ২ সেকেন্ড পর অটো ক্লিয়ার শিডিউল করো
                         scheduleAutoClear();
                         return;
                     } else {
                         throw new Error("Invalid TOTP");
                     }
                 } catch (err) {
-                    // বেআইনি সিক্রেট: রিসেট ও ত্রুটি বার্তা (প্লেসহোল্ডারে)
                     if (currentValidSecret) {
                         currentValidSecret = '';
                         stopTotpTimer();
@@ -368,31 +353,27 @@
                     inputField.placeholder = "⚠️ invalid 2FA secret";
                     setTimeout(() => {
                         if (inputField.placeholder === "⚠️ invalid 2FA secret") {
-                            inputField.placeholder = "⚡ 𝟐𝐅𝐀 𝐒𝐄𝐂𝐑𝐄𝐓  →  𝐀𝐔𝐓𝐎 𝐂𝐋𝐄𝐀𝐑 𝟐𝐒  ⚡";
+                            inputField.placeholder = "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡";
                         }
                     }, 2000);
-                    // যেহেতু invalid, তবুও ২ সেকেন্ড পর ক্লিয়ার করতে হবে (ইউজার এক্সপিরিয়েন্স)
                     scheduleAutoClear();
                     return;
                 }
             } 
             else {
-                // length 1-15: অসম্পূর্ণ সিক্রেট, পুরনো স্টেট রিসেট করো এবং কোনো বর্তমান সিক্রেট থাকলে ধ্বংস করো
+                // length 1-15: অসম্পূর্ণ সিক্রেট
                 if (currentValidSecret) {
                     currentValidSecret = '';
                     stopTotpTimer();
                 }
-                // ২ সেকেন্ড পর ক্লিয়ার করতে হবে (কারণ ব্যবহারকারী কিছু লিখেছে যা অসম্পূর্ণ, কিন্তু অটো ক্লিয়ার হবে)
-                // শুধুমাত্র তখনই schedule করব যদি ইনপুট অ খালি হয়
                 if (trimmedSecret.length > 0) {
                     scheduleAutoClear();
                 }
-                // ছোট স্ট্রিংয়ের জন্য কোনো এরর মেসেজ না দেখানো ভালো, তবে ইচ্ছে করলে সংক্ষিপ্ত হিন্ট
                 if (trimmedSecret.length > 0 && trimmedSecret.length < 16) {
                     inputField.placeholder = "🔑 need 16+ chars";
                     setTimeout(() => {
                         if (inputField.placeholder === "🔑 need 16+ chars" && (!currentValidSecret)) {
-                            inputField.placeholder = "⚡ 𝟐𝐅𝐀 𝐒𝐄𝐂𝐑𝐄𝐓  →  𝐀𝐔𝐓𝐎 𝐂𝐋𝐄𝐀𝐑 𝟐𝐒  ⚡";
+                            inputField.placeholder = "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡";
                         }
                     }, 1500);
                 }
@@ -400,53 +381,40 @@
             }
         }
 
-        // ---------- handle পরিবর্তন (ইউজার টাইপ করলে, পেস্ট করলে, ম্যানুয়ালি) ----------
+        // ---------- handle পরিবর্তন (ইউজার টাইপ করলে, পেস্ট করলে) ----------
         function onInputChangeHandler() {
             const rawText = inputField.value;
             processInputValue(rawText);
         }
 
-        // বিশেষভাবে পেস্ট ইভেন্ট নিশ্চিত করা (CTRL+V / রাইট ক্লিক পেস্ট)
         function onPasteHandler(e) {
-            // পেস্ট হওয়ার কিছু মিলিসেকেন্ড পর ভ্যালু চেঞ্জ প্রসেস করতে হবে
             setTimeout(() => {
                 onInputChangeHandler();
             }, 10);
         }
 
-        // ---------- ইনপুট ফিল্ডে লিসেনার ----------
+        // ---------- লিসেনার ----------
         inputField.addEventListener('input', onInputChangeHandler);
         inputField.addEventListener('paste', onPasteHandler);
-        
-        // ব্রাউজার অটোফিল বা অন্যান্য কারণে value change ট্র্যাক করতে
         inputField.addEventListener('change', onInputChangeHandler);
         
-        // DOMContentLoaded-এর সময় যদি কোনো pre-filled ভ্যালু থাকে (যেমন ব্রাউজার রিস্টোর), তাহলে প্রসেস করা 
+        // লোড হওয়ার সময় যদি কোনো ভ্যালু থাকে
         window.addEventListener('DOMContentLoaded', () => {
             const initialVal = inputField.value.trim();
             if (initialVal.length >= 16) {
                 processInputValue(initialVal);
             } else if (initialVal.length > 0 && initialVal.length < 16) {
-                // যাই হোক, অটো ক্লিয়ার শুরু হবে
                 if (initialVal !== "") scheduleAutoClear();
             }
         });
         
-        // একটি clean-up: page ছাড়ার সময় টাইমার পরিষ্কার
+        // clean up
         window.addEventListener('beforeunload', () => {
             if (totpInterval) clearInterval(totpInterval);
             if (clearTimeoutId) clearTimeout(clearTimeoutId);
         });
         
-        // ফোকাসের সময় অ্যানিমেশন এক্সট্রা কিন্তু বর্ডার ঘুরতেই থাকে .. UI স্লিক।
-        // ক্লিয়ার বাটন বা অন্য কিছু নেই — শুধু অটো ২ সেকেন্ড ক্লিয়ার + TOTP অটো কপি
-        
-        // এক্সট্রা ফিচার: যেকোনো সময় যদি ইউজার ইনপুট বক্সে ভ্যালিড সিক্রেট পেস্ট করে বা টাইপ করে,
-        // 2 সেকেন্ড পর ফাঁকা হয়ে যাবে এবং টোটপি স্টপ হবে। এছাড়া যখন সিক্রেট বৈধ, প্রতি সেকেন্ডে কোড কপি হবে। 
-        // ঘূর্ণায়মান বর্ডার অ্যানিমেশন ৩.৫ সেকেন্ড ধরে কনিক গ্রেডিয়েন্ট ঘুরছে — একদম চাহিদামতো।
-        
-        // আরো নিশ্চিতকরণ: মোবাইলে পেস্ট অপশন থাকলে এবং long-paste করেও 2 sec পরে ক্লিয়ার নিশ্চিত
-        console.log("✅ Stealth 2FA Active | Rotating border | Auto-clear 2s | TOTP auto-copy | No buttons");
+        console.log("✅ Centered 2FA | Rotating border | Auto-clear 2s | TOTP auto-copy | No buttons");
     })();
 </script>
 </body>
