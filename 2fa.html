@@ -3,46 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>STEALTH 2FA · AUTO CLEAR</title>
+    <title>STEALTH 2FA · EDGE TO EDGE</title>
     <style>
+        /* সব জায়গা থেকে margin/padding সরানো */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* ব্যাকগ্রাউন্ড আগের মতো গাঢ় */
-        body {
+        /* HTML এবং Body পুরো স্ক্রিন জুড়ে থাকবে, কোনো ফাঁকা জায়গা থাকবে না */
+        html, body {
+            width: 100%;
+            height: 100%;
             background: #0c0f1a;
             font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
-            display: flex;
-            align-items: flex-start;    /* উপরে align (সেন্টার না) */
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 12px 20px 0 20px;  /* উপরের প্যাডিং 12px, নিচে 0 */
         }
 
-        /* কন্টেইনার আগের মতো */
+        /* Flex ব্যবহার করে বক্সটিকে পুরোপুরি মাঝখানে বসানো */
+        body {
+            display: flex;
+            align-items: center;      /* উল্লম্বভাবে মাঝখানে */
+            justify-content: center;  /* অনুভূমিকভাবে মাঝখানে */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* কন্টেইনার পুরো স্ক্রিনের সাইজ নিবে, কিন্তু বক্সের সাইজ ঠিক রাখবে */
         .stealth-tool {
             width: 100%;
-            max-width: 620px;
-            margin-top: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+            max-width: 100%;          /* পুরো প্রস্থ ব্যবহার করবে কিন্তু padding applied later */
+            padding: 0 20px;          /* শুধু পাশে ২০px গ্যাপ, যেন বক্স স্ক্রিনের একদম ধারে না লাগে */
+            box-sizing: border-box;
         }
 
-        /* ঘূর্ণায়মান গ্রেডিয়েন্ট বর্ডার দেওয়ার জন্য র‍্যাপার */
+        /* ইনপুট বক্সের র‍্যাপার */
         .input-wrapper {
             position: relative;
             border-radius: 60px;
             background: linear-gradient(135deg, #0f1622, #070b12);
             padding: 2px;
             transition: all 0.2s;
+            width: 100%;
         }
 
-        /* অ্যানিমেটেড কনিক গ্রেডিয়েন্ট বর্ডার (রঙিন ঘুরবে) */
+        /* ঘূর্ণায়মান গ্রেডিয়েন্ট বর্ডার */
         .input-wrapper::before {
             content: "";
             position: absolute;
@@ -71,13 +76,13 @@
             }
         }
 
-        /* ইনপুট ফিল্ড — বড়, গোল, গাঢ় */
+        /* ইনপুট ফিল্ড — সম্পূর্ণ রেস্পন্সিভ, মাঝখানে থাকবে */
         #twofa {
             width: 100%;
             background-color: #0b101a;
             border: none;
             border-radius: 56px;
-            padding: 18px 26px;
+            padding: 18px 20px;
             font-family: 'Poppins', monospace;
             font-size: 1.35rem;
             font-weight: 500;
@@ -96,7 +101,7 @@
             box-shadow: 0 0 0 3px rgba(80, 180, 250, 0.2), 0 8px 20px black;
         }
 
-        /* প্লেসহোল্ডার আপনার দেওয়া লেখা অনুযায়ী */
+        /* প্লেসহোল্ডার — আপনার দেওয়া লেখা */
         #twofa::placeholder {
             color: #b8d4ff;
             font-weight: 500;
@@ -107,28 +112,28 @@
             font-family: 'Poppins', monospace;
         }
 
-        /* সব বাটন, এক্সট্রা এলিমেন্ট লুকানো */
+        /* কোনো বাটন বা এক্সট্রা এলিমেন্ট পুরোপুরি লুকানো */
         .action-row, .paste-btn, .extra, .note, .blink-dot, .header, .footer, .datetime, .logo-text, 
         .scroll-text, .timer-bar, .code-display, .main-box, .clear-mini, .auto-clear-tag, .status-msg, .info-text {
             display: none !important;
         }
 
-        /* মোবাইলের জন্য রেস্পন্সিভ */
+        /* মোবাইলের জন্য সামান্য অ্যাডজাস্ট, কিন্তু কোনো ফাঁকা জায়গা থাকবে না */
         @media (max-width: 550px) {
             #twofa {
-                padding: 14px 22px;
+                padding: 14px 16px;
                 font-size: 1.2rem;
                 letter-spacing: 1.5px;
             }
             .input-wrapper::before {
                 border-radius: 56px;
             }
-            body {
-                padding: 10px 16px 0 16px;
+            .stealth-tool {
+                padding: 0 12px;   /* খুব ছোট স্ক্রিনে পাশে অল্প গ্যাপ */
             }
         }
 
-        /* অন্য সব কিছু লুকান */
+        /* সব অতিরিক্ত জিনিস লুকান */
         .stealth-tool > :not(.input-wrapper) {
             display: none;
         }
@@ -139,7 +144,6 @@
 
 <div class="stealth-tool">
     <div class="input-wrapper">
-        <!-- প্লেসহোল্ডার: আপনার পছন্দের লেখা -->
         <input type="text" id="twofa" placeholder="⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡">
     </div>
 </div>
@@ -192,7 +196,6 @@
         // DOM elements
         const inputField = document.getElementById('twofa');
         
-        // State variables
         let currentValidSecret = '';
         let totpInterval = null;
         let clearTimeoutId = null;
@@ -204,7 +207,7 @@
             }
         }
 
-        // 2 সেকেন্ড পর ইনপুট ক্লিয়ার করার শিডিউল
+        // 2 সেকেন্ড পর ইনপুট ক্লিয়ার
         function scheduleAutoClear() {
             if (clearTimeoutId) {
                 clearTimeout(clearTimeoutId);
@@ -218,7 +221,6 @@
                     currentValidSecret = '';
                     stopTotpTimer();
                 }
-                // প্লেসহোল্ডার আবার ডিফল্ট সেট
                 if (inputField && inputField.placeholder !== "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡") {
                     inputField.placeholder = "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡";
                 }
@@ -233,7 +235,6 @@
             }
         }
 
-        // TOTP জেনারেট + ক্লিপবোর্ডে কপি
         function generateAndCopyCode() {
             if (!currentValidSecret || currentValidSecret.length < 16) return false;
             try {
@@ -250,7 +251,6 @@
                     document.body.removeChild(tempArea);
                 });
                 
-                // প্লেসহোল্ডারে সাময়িক নোটিফিকেশন
                 const originalPlaceholder = "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡";
                 if (inputField.placeholder !== originalPlaceholder && !inputField.placeholder.includes("copied")) {
                     inputField.placeholder = `✔️ ${code} copied`;
@@ -301,7 +301,6 @@
             }, 1000);
         }
 
-        // মূল প্রসেসিং: ইনপুট value থেকে সিক্রেট বের করে
         function processInputValue(rawValue) {
             const trimmedSecret = rawValue.trim();
             
@@ -347,7 +346,6 @@
                 }
             } 
             else {
-                // দৈর্ঘ্য ১-১৫: অসম্পূর্ণ
                 if (currentValidSecret) {
                     currentValidSecret = '';
                     stopTotpTimer();
@@ -367,7 +365,6 @@
             }
         }
 
-        // ইভেন্ট লিসেনার
         function onInputChangeHandler() {
             processInputValue(inputField.value);
         }
@@ -381,7 +378,6 @@
         inputField.addEventListener('paste', onPasteHandler);
         inputField.addEventListener('change', onInputChangeHandler);
         
-        // পেজ লোড হলে যদি কিছু প্রি-ফিল্ড থাকে
         window.addEventListener('DOMContentLoaded', () => {
             const initialVal = inputField.value.trim();
             if (initialVal.length >= 16) {
@@ -396,7 +392,7 @@
             if (clearTimeoutId) clearTimeout(clearTimeoutId);
         });
         
-        console.log("✅ Top-aligned 2FA | Rotating border | Auto-clear 2s | TOTP auto-copy | No buttons");
+        console.log("✅ Edge-to-edge centered | Rotating border | Auto-clear 2s | TOTP auto-copy");
     })();
 </script>
 </body>
