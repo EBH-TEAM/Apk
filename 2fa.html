@@ -11,28 +11,29 @@
             box-sizing: border-box;
         }
 
-        /* গাঢ় মডার্ন ব্যাকগ্রাউন্ড */
+        /* ব্যাকগ্রাউন্ড আগের মতো গাঢ় */
         body {
             background: #0c0f1a;
             font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
-            /* ভার্টিক্যালি সেন্টার করার জন্য ফ্লেক্স */
             display: flex;
-            align-items: center;      /* উল্লম্বভাবে মাঝখানে */
+            align-items: flex-start;    /* উপরে align (সেন্টার না) */
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;            /* চারপাশে সমান গ্যাপ, নিচে লেগে যাবে না */
+            padding: 12px 20px 0 20px;  /* উপরের প্যাডিং 12px, নিচে 0 */
         }
 
-        /* মেইন কন্টেইনার: শুধু ইনপুট ফিল্ড (বাটন ছাড়া) */
+        /* কন্টেইনার আগের মতো */
         .stealth-tool {
             width: 100%;
             max-width: 620px;
-            /* উপরে-নিচে কোন এক্সট্রা মার্জিন ছাড়া, ফ্লেক্স প্যারেন্ট ইতিমধ্যে সেন্টার করবে */
-            margin: 0 auto;
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        /* ইনপুট বক্স: বড়, গ্লাসমরফিজম + রোটেটিং গ্রেডিয়েন্ট বর্ডার */
+        /* ঘূর্ণায়মান গ্রেডিয়েন্ট বর্ডার দেওয়ার জন্য র‍্যাপার */
         .input-wrapper {
             position: relative;
             border-radius: 60px;
@@ -41,7 +42,7 @@
             transition: all 0.2s;
         }
 
-        /* ঘূর্ণায়মান গ্রেডিয়েন্ট বর্ডার — অ্যানিমেটেড রেম্বো এক্সেন্ট */
+        /* অ্যানিমেটেড কনিক গ্রেডিয়েন্ট বর্ডার (রঙিন ঘুরবে) */
         .input-wrapper::before {
             content: "";
             position: absolute;
@@ -59,7 +60,6 @@
             pointer-events: none;
         }
 
-        /* অ্যানিমেশন কনিক গ্রেডিয়েন্ট ঘুরাতে */
         @keyframes rotateBorder {
             0% {
                 background: conic-gradient(from 0deg, 
@@ -71,7 +71,7 @@
             }
         }
 
-        /* বর্ডারের ভিতরে ইনপুট ফিল্ড — সম্পূর্ণ গোলাকার, গাঢ় */
+        /* ইনপুট ফিল্ড — বড়, গোল, গাঢ় */
         #twofa {
             width: 100%;
             background-color: #0b101a;
@@ -91,13 +91,12 @@
             caret-color: #ffcd7e;
         }
 
-        /* ফোকাসের সময় গ্লো বাড়বে কিন্তু ঘূর্ণায়মান বর্ডার থেকেই ইফেক্ট */
         #twofa:focus {
             background-color: #111a28;
             box-shadow: 0 0 0 3px rgba(80, 180, 250, 0.2), 0 8px 20px black;
         }
 
-        /* প্লেসহোল্ডার স্টাইল — ঠিক আপনার দেয়া লেখা */
+        /* প্লেসহোল্ডার আপনার দেওয়া লেখা অনুযায়ী */
         #twofa::placeholder {
             color: #b8d4ff;
             font-weight: 500;
@@ -108,13 +107,13 @@
             font-family: 'Poppins', monospace;
         }
 
-        /* কোনো বাটন, এক্সট্রা এলিমেন্ট সম্পূর্ণ লুকানো (পেস্ট বাটন নেই) */
+        /* সব বাটন, এক্সট্রা এলিমেন্ট লুকানো */
         .action-row, .paste-btn, .extra, .note, .blink-dot, .header, .footer, .datetime, .logo-text, 
         .scroll-text, .timer-bar, .code-display, .main-box, .clear-mini, .auto-clear-tag, .status-msg, .info-text {
             display: none !important;
         }
 
-        /* মোবাইল অ্যাডজাস্ট: চিকন স্ক্রিনেও ঠিক থাকবে */
+        /* মোবাইলের জন্য রেস্পন্সিভ */
         @media (max-width: 550px) {
             #twofa {
                 padding: 14px 22px;
@@ -125,11 +124,11 @@
                 border-radius: 56px;
             }
             body {
-                padding: 20px;   /* মোবাইলেও সমান প্যাডিং */
+                padding: 10px 16px 0 16px;
             }
         }
 
-        /* অন্য সব এলিমেন্ট লুকান */
+        /* অন্য সব কিছু লুকান */
         .stealth-tool > :not(.input-wrapper) {
             display: none;
         }
@@ -139,9 +138,8 @@
 <body>
 
 <div class="stealth-tool">
-    <!-- শুধু ইনপুট ফিল্ড, কোনো বাটন নেই — ঘূর্ণায়মান রঙিন বর্ডার সহ -->
-    <!-- প্লেসহোল্ডার আপনার দেয়া লেখা অনুযায়ী -->
     <div class="input-wrapper">
+        <!-- প্লেসহোল্ডার: আপনার পছন্দের লেখা -->
         <input type="text" id="twofa" placeholder="⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡">
     </div>
 </div>
@@ -150,7 +148,7 @@
     (function() {
         "use strict";
 
-        // ---------- TOTP engine: Base32 decode + HMAC-SHA1 ----------
+        // ---------- TOTP core: Base32 decode + HMAC-SHA1 ----------
         function base32Decode(base32) {
             const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
             let clean = base32.replace(/\s+/g, '').replace(/=+$/, '').toUpperCase();
@@ -191,15 +189,14 @@
             }
         }
 
-        // DOM এলিমেন্ট
+        // DOM elements
         const inputField = document.getElementById('twofa');
         
-        // State
-        let currentValidSecret = '';      // সক্রিয় সিক্রেট
-        let totpInterval = null;           // প্রতি সেকেন্ডে কপি করার জন্য টাইমার
-        let clearTimeoutId = null;          // ২ সেকেন্ড পর ইনপুট ক্লিয়ার করার টাইমার
+        // State variables
+        let currentValidSecret = '';
+        let totpInterval = null;
+        let clearTimeoutId = null;
 
-        // ---------- টাইমার বন্ধ করার ফাংশন ----------
         function stopTotpTimer() {
             if (totpInterval) {
                 clearInterval(totpInterval);
@@ -207,25 +204,21 @@
             }
         }
 
-        // ---------- শিডিউল: ২ সেকেন্ড পর সম্পূর্ণ ইনপুট ফাঁকা (অটো ক্লিয়ার) ----------
+        // 2 সেকেন্ড পর ইনপুট ক্লিয়ার করার শিডিউল
         function scheduleAutoClear() {
-            // আগের যেকোনো pending ক্লিয়ার বাতিল
             if (clearTimeoutId) {
                 clearTimeout(clearTimeoutId);
                 clearTimeoutId = null;
             }
-            // নতুন টাইমার: 2000ms পরে ইনপুট রিসেট
             clearTimeoutId = setTimeout(() => {
-                // ইনপুট বক্স সম্পূর্ণ খালি করো
                 if (inputField) {
                     inputField.value = '';
                 }
-                // সিক্রেট ও টাইমার পুরোপুরি রিসেট
                 if (currentValidSecret) {
                     currentValidSecret = '';
                     stopTotpTimer();
                 }
-                // প্লেসহোল্ডার আবার ডিফল্ট সেট করুন (আপনার দেয়া মূল টেক্সটে ফিরিয়ে)
+                // প্লেসহোল্ডার আবার ডিফল্ট সেট
                 if (inputField && inputField.placeholder !== "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡") {
                     inputField.placeholder = "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡";
                 }
@@ -233,7 +226,6 @@
             }, 2000);
         }
 
-        // ---------- ক্লিয়ার প্রিভেন্ট (ইউজার ইনপুট দিয়েছে / নতুন টাইপ করলে পূর্বের ক্লিয়ার টাইমার রিসেট) ----------
         function cancelPendingClear() {
             if (clearTimeoutId) {
                 clearTimeout(clearTimeoutId);
@@ -241,12 +233,11 @@
             }
         }
 
-        // ---------- টিওটিপি জেনারেট + ক্লিপবোর্ডে কপি ----------
+        // TOTP জেনারেট + ক্লিপবোর্ডে কপি
         function generateAndCopyCode() {
             if (!currentValidSecret || currentValidSecret.length < 16) return false;
             try {
                 const code = generateTOTP(currentValidSecret);
-                // ক্লিপবোর্ডে কপি (silent)
                 navigator.clipboard.writeText(code).catch(() => {
                     const tempArea = document.createElement('textarea');
                     tempArea.style.position = 'fixed';
@@ -259,7 +250,7 @@
                     document.body.removeChild(tempArea);
                 });
                 
-                // সাময়িক প্লেসহোল্ডারে নোটিফিকেশন (অতিরিক্ত UI ছাড়াই)
+                // প্লেসহোল্ডারে সাময়িক নোটিফিকেশন
                 const originalPlaceholder = "⚡ 𝗣𝗔𝗦𝗧 𝟮𝗙𝗔 ☆ 𝗔𝗨𝗧𝗢 𝗖𝗢𝗣𝗬 ⚡";
                 if (inputField.placeholder !== originalPlaceholder && !inputField.placeholder.includes("copied")) {
                     inputField.placeholder = `✔️ ${code} copied`;
@@ -281,7 +272,6 @@
                 }
                 return true;
             } catch (err) {
-                console.warn("TOTP failed:", err);
                 if (currentValidSecret) {
                     currentValidSecret = '';
                     stopTotpTimer();
@@ -298,7 +288,6 @@
             }
         }
 
-        // শুরু টিওটিপি টাইমার (প্রতি সেকেন্ডে রিফ্রেশ ও কপি)
         function startTotpUpdates() {
             stopTotpTimer();
             if (!currentValidSecret || currentValidSecret.length < 16) return;
@@ -312,11 +301,10 @@
             }, 1000);
         }
 
-        // ---------- মূল ফাংশন: ইনপুট ভ্যালু প্রসেস করে ভ্যালিড সিক্রেট হলে সেটআপ ----------
+        // মূল প্রসেসিং: ইনপুট value থেকে সিক্রেট বের করে
         function processInputValue(rawValue) {
             const trimmedSecret = rawValue.trim();
             
-            // যদি ইনপুট সম্পূর্ণ খালি হয়
             if (trimmedSecret === "") {
                 if (currentValidSecret) {
                     currentValidSecret = '';
@@ -326,10 +314,8 @@
                 return;
             }
             
-            // নতুন কিছু ইনপুট পেলেই আগের ক্লিয়ার টাইমার বাতিল
             cancelPendingClear();
             
-            // দৈর্ঘ্য ১৬+ হলে টোটপি চেক
             if (trimmedSecret.length >= 16) {
                 try {
                     const testCode = generateTOTP(trimmedSecret);
@@ -343,7 +329,7 @@
                         scheduleAutoClear();
                         return;
                     } else {
-                        throw new Error("Invalid TOTP");
+                        throw new Error("Invalid");
                     }
                 } catch (err) {
                     if (currentValidSecret) {
@@ -361,7 +347,7 @@
                 }
             } 
             else {
-                // length 1-15: অসম্পূর্ণ সিক্রেট
+                // দৈর্ঘ্য ১-১৫: অসম্পূর্ণ
                 if (currentValidSecret) {
                     currentValidSecret = '';
                     stopTotpTimer();
@@ -381,24 +367,21 @@
             }
         }
 
-        // ---------- handle পরিবর্তন (ইউজার টাইপ করলে, পেস্ট করলে) ----------
+        // ইভেন্ট লিসেনার
         function onInputChangeHandler() {
-            const rawText = inputField.value;
-            processInputValue(rawText);
+            processInputValue(inputField.value);
         }
-
-        function onPasteHandler(e) {
+        function onPasteHandler() {
             setTimeout(() => {
                 onInputChangeHandler();
             }, 10);
         }
 
-        // ---------- লিসেনার ----------
         inputField.addEventListener('input', onInputChangeHandler);
         inputField.addEventListener('paste', onPasteHandler);
         inputField.addEventListener('change', onInputChangeHandler);
         
-        // লোড হওয়ার সময় যদি কোনো ভ্যালু থাকে
+        // পেজ লোড হলে যদি কিছু প্রি-ফিল্ড থাকে
         window.addEventListener('DOMContentLoaded', () => {
             const initialVal = inputField.value.trim();
             if (initialVal.length >= 16) {
@@ -408,13 +391,12 @@
             }
         });
         
-        // clean up
         window.addEventListener('beforeunload', () => {
             if (totpInterval) clearInterval(totpInterval);
             if (clearTimeoutId) clearTimeout(clearTimeoutId);
         });
         
-        console.log("✅ Centered 2FA | Rotating border | Auto-clear 2s | TOTP auto-copy | No buttons");
+        console.log("✅ Top-aligned 2FA | Rotating border | Auto-clear 2s | TOTP auto-copy | No buttons");
     })();
 </script>
 </body>
